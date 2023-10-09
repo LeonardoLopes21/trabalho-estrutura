@@ -108,6 +108,84 @@ void deleteNode(struct Node** root, char *targetNome) {
     }
 }
 
+void updateNode(struct Node* root, char *targetNome) {
+    puts(root);
+    struct Node* current = root;
+    
+    while (current != NULL) {
+        int cmp = strcmp(targetNome, current->nome);
+        if (cmp == 0) {
+            break;
+        } else if (cmp < 0) {
+            current = current->left;
+        } else {
+            current = current->right;
+        }
+    }
+
+    if(current == NULL){
+        puts("NAO ENCONTRADO");
+        return;
+    }
+
+    int menu = 1;
+    float preco = current->preco;
+    int quantidadestoq = current->quantidadeEstoque;
+    char nome[20] = "";
+    char cat[20] = "";
+    strcpy(nome, current->nome);
+    strcpy(cat, current->categoria);
+    
+    while(menu != 0){
+        puts("Por favor digite o que deseja alterar: \n");
+        puts("0: SAIR");
+        puts("1: PRECO \n");
+        puts("2: CATEGORIA \n");
+        puts("3: QUANTIDADE DE ESTOQUE\n");
+        puts("4: NOME\n");
+        puts("5: APLICAR\n");
+        scanf("%d", &menu);
+        fflush(stdin);
+
+        switch(menu){
+            case 0: return;
+            case 1: puts("DIGITE O NOVO PRECO"); scanf("%f", &preco); fflush(stdin);break;
+            case 2: puts("DIGITE A NOVA CATEGORIA"); scanf("%s", cat); fflush(stdin);break;
+            case 3: puts("DIGITE A NOVA QUANTIDADE DE ESTOQUE"); scanf("%d", &quantidadestoq); fflush(stdin);break;
+            case 4: puts("DIGITE O NOVO NOME"); scanf("%s", nome); fflush(stdin);break;
+            case 5: menu = 0; break;
+        }
+
+        
+
+    }
+
+    puts(root);
+    
+    if(preco != current->preco && preco > 0){
+        current->preco = preco;
+    }
+
+    if(strcmp(cat, current->categoria) != 0){
+        strcpy(current->categoria, cat);
+    }
+
+    if(quantidadestoq != current->quantidadeEstoque){
+        current->quantidadeEstoque = quantidadestoq;
+    }
+
+    if(strcmp(nome, current->nome) != 0){
+
+        // Delete the old node
+        deleteNode(&root, targetNome);
+        // Node found, insert a new node with the updated name
+        insert(root, nome, preco, cat, quantidadestoq);
+         
+    }
+
+}
+
+
 void finder(struct Node* root, char *targetNome) {
     if (root == NULL || strcmp(root->nome, targetNome) == 0) {
         printf("==================\n");
@@ -125,6 +203,7 @@ void finder(struct Node* root, char *targetNome) {
         return finder(root->right, targetNome);
     }
 }
+
 
 
 
@@ -152,10 +231,8 @@ int main() {
     // printf("In-order traversal: ");
     // inOrderTraversal(root);
     // printf("\n");
-    puts("BEFORE DELETION");
     inOrderTraversal(root);
-    deleteNode(&root, "Humus");
-    puts("AFTER DELETION!");
+    updateNode(root, "Humus");
     inOrderTraversal(root);
 
     return 0;
