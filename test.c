@@ -53,8 +53,59 @@ void inOrderTraversal(struct Node* root) {
     }
 }
 
-void delete(struct Node* root){
+struct Node* findMin(struct Node* node) {
+    struct Node* current = node;
+    while (current && current->left != NULL) {
+        current = current->left;
+    }
+    return current;
+}
 
+void deleteNode(struct Node** root, char *targetNome) {
+    struct Node* current = *root;
+    struct Node* parent = NULL;
+
+    while (current != NULL) {
+        int cmp = strcmp(targetNome, current->nome);
+
+        if (cmp == 0) {
+            // Node found
+            if (current->left == NULL && current->right == NULL) {
+                // Case 1: Node has no children
+                if (parent == NULL) {
+                    *root = NULL; // The root itself is the only node in the tree
+                } else if (parent->left == current) {
+                    parent->left = NULL;
+                } else {
+                    parent->right = NULL;
+                }
+                free(current);
+            } else if (current->left == NULL || current->right == NULL) {
+                // Case 2: Node has one child
+                struct Node* child = (current->left != NULL) ? current->left : current->right;
+                if (parent == NULL) {
+                    *root = child; // Current node is the root
+                } else if (parent->left == current) {
+                    parent->left = child;
+                } else {
+                    parent->right = child;
+                }
+                free(current);
+            } else {
+                // Case 3: Node has two children
+                struct Node* successor = findMin(current->right);
+                successor->left = current->left;
+                parent->left = current->right;
+                free(current);
+            }
+        } else if (cmp < 0) {
+            parent = current;
+            current = current->left;
+        } else {
+            parent = current;
+            current = current->right;
+        }
+    }
 }
 
 void finder(struct Node* root, char *targetNome) {
@@ -81,11 +132,14 @@ int main() {
     struct Node* root = NULL;
 
     // Insert some nodes into the binary tree
-    root = insert(root, "Omo", 2.99, "Higiene", 20);
-    insert(root, "Dove", 7.99, "Higiene", 20);
-    insert(root, "Frango", 10.99, "Comida", 10);
-    insert(root, "Asa", 4.99, "Comida", 50);
-    insert(root, "Boi", 100.00, "Comida", 10);
+    root = insert(root, "Queijo", 2.99, "Comida", 20);
+    insert(root, "Humus", 100.00, "Comida", 10);
+    insert(root, "Omo", 21.99, "Comida", 23);
+    insert(root, "Faca", 21.99, "Comida", 23);
+    insert(root, "Navio", 21.99, "Comida", 23);
+    insert(root, "Mingau", 21.99, "Comida", 23);
+    insert(root, "Pato", 21.99, "Comida", 23);
+    insert(root, "Asa", 100.00, "Comida", 10);
 
  
     // insert(root, 40);
@@ -98,7 +152,11 @@ int main() {
     // printf("In-order traversal: ");
     // inOrderTraversal(root);
     // printf("\n");
-    finder(root, "Frango");
+    puts("BEFORE DELETION");
+    inOrderTraversal(root);
+    deleteNode(&root, "Humus");
+    puts("AFTER DELETION!");
+    inOrderTraversal(root);
 
     return 0;
 }
