@@ -26,15 +26,15 @@ struct Node* createNode(char nome[20], float preco, char categoria[20], int quan
 }
 
 
-struct Node* insert(struct Node* root, char *data, float preco, char *cat, int quantstoq) {
+struct Node* insert(struct Node* root, char *nome, float preco, char *cat, int quantstoq) {
     if (root == NULL) {
-        return createNode(data, preco, cat, quantstoq);
+        return createNode(nome, preco, cat, quantstoq);
     }
 
-    if (0 > strcmp(data, root->nome)) {
-        root->left = insert(root->left, data, preco, cat, quantstoq);
-    } else if (0 < strcmp(data, root->nome)) {
-        root->right = insert(root->right, data, preco, cat, quantstoq);
+    if (0 > strcmp(nome, root->nome)) {
+        root->left = insert(root->left, nome, preco, cat, quantstoq);
+    } else if (0 < strcmp(nome, root->nome)) {
+        root->right = insert(root->right, nome, preco, cat, quantstoq);
     }
 
     return root;
@@ -51,6 +51,23 @@ void inOrderTraversal(struct Node* root) {
         printf("%d \n", root->quantidadeEstoque);
         inOrderTraversal(root->right);
     }
+}
+
+void printIfLowerThan(struct Node* root, int lower){
+
+     if (root != NULL) {
+        printIfLowerThan(root->left, lower);
+        if(root->preco < lower){
+            printf("==================\n");
+            printf("%s \n", root->nome);
+            printf("%s \n", root->categoria);
+            printf("%.2f \n", root->preco);
+            printf("%d \n", root->quantidadeEstoque);
+        }
+        
+        printIfLowerThan(root->right, lower);
+    }
+
 }
 
 struct Node* findMin(struct Node* node) {
@@ -108,8 +125,8 @@ void deleteNode(struct Node** root, char *targetNome) {
     }
 }
 
+
 void updateNode(struct Node* root, char *targetNome) {
-    puts(root);
     struct Node* current = root;
     
     while (current != NULL) {
@@ -160,7 +177,6 @@ void updateNode(struct Node* root, char *targetNome) {
 
     }
 
-    puts(root);
     
     if(preco != current->preco && preco > 0){
         current->preco = preco;
@@ -206,34 +222,94 @@ void finder(struct Node* root, char *targetNome) {
 
 
 
+struct Node* registerScreen(struct Node* root){
+    puts(root);
+    char prodName[50] = "";
+    char cat[20] = "";
+    float preco = 0;
+    int qtdestoque;
+    char confirm[10] = "";
+    puts("================= REGISTRO ==============");
+    puts("Por favor digite o nome do produto: ");
+    scanf("%s", prodName);
+    fflush(stdin);
+    puts("Por favor digite o preco do produto: ");
+    scanf("%f", &preco);
+    fflush(stdin);
+    puts("Por favor digite a categoria do produto: ");
+    scanf("%s", cat);
+    fflush(stdin);
+    fflush(stdin);
+    puts("Por favor digite a quantidade no estoque do produto: ");
+    scanf("%d", &qtdestoque);
+    puts("=======================================");
+    puts("Deseja adicionar este produto? y/n");
+    puts(prodName);
+    puts(cat);
+    printf("%.2f \n", preco);
+    printf("%d\n", qtdestoque);
+    scanf("%s", confirm);
+    if(!strcmp(confirm, "y")){ 
+        if(root != NULL){
+            insert(root, prodName, preco, cat, qtdestoque); 
+            return root;
+        } else {
+            root = insert(root, prodName, preco, cat, qtdestoque); 
+            return root;
+           
+        }
+    } else {
+        return root;
+    }
+
+}
+
+void alterScreen(struct Node* root){
+    char nome[20];
+    inOrderTraversal(root);
+    puts("Que produto deseja alterar?");
+    scanf("%s", nome);
+    fflush(stdin);
+    updateNode(root, nome);
+
+}
+
+void deleteScreen(struct Node* root){
+    char nome[20];
+    inOrderTraversal(root);
+    puts("Que produto deseja alterar?");
+    fgets(nome, 20, stdin);
+    puts(nome);
+    system("pause");
+    deleteNode(&root, nome);
+
+}
+
 
 int main() {
+
     struct Node* root = NULL;
 
-    // Insert some nodes into the binary tree
-    root = insert(root, "Queijo", 2.99, "Comida", 20);
-    insert(root, "Humus", 100.00, "Comida", 10);
-    insert(root, "Omo", 21.99, "Comida", 23);
-    insert(root, "Faca", 21.99, "Comida", 23);
-    insert(root, "Navio", 21.99, "Comida", 23);
-    insert(root, "Mingau", 21.99, "Comida", 23);
-    insert(root, "Pato", 21.99, "Comida", 23);
-    insert(root, "Asa", 100.00, "Comida", 10);
+    while(1){
 
- 
-    // insert(root, 40);
-    // insert(root, 70);
-    // insert(root, 60);
-    // insert(root, 80);
-    // insert(root, 45);
+        system("cls");
 
-    // Perform an in-order traversal to print the elements in sorted order
-    // printf("In-order traversal: ");
-    // inOrderTraversal(root);
-    // printf("\n");
-    inOrderTraversal(root);
-    updateNode(root, "Humus");
-    inOrderTraversal(root);
+            int selector = 0;
+            puts("=============== BEM VINDO! ====================");
+            puts("1: Registrar produto");
+            puts("2: Ver Produtos");
+            puts("3: Alterar Produtos");
+            puts("4: Deletar Produtos");
+            scanf("%d", &selector);
+            fflush(stdin);
+            switch(selector){
+                case 1: root = registerScreen(root); break;
+                case 2: inOrderTraversal(root); system("pause");break;
+                case 3: alterScreen(root); break;
+                case 4: deleteScreen(root); break;
+            }
+
+    }
 
     return 0;
 }
