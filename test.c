@@ -3,7 +3,7 @@
 #include <ctype.h> 
 #include <string.h>
 
-// Define the structure for a binary tree node
+// Estrutura basica
 struct Node {
     char nome[50];
     float preco;
@@ -13,7 +13,7 @@ struct Node {
     struct Node* right;
 };
 
-// Function to create a new binary tree node
+// Criar node na árvore binaria
 struct Node* createNode(char nome[50], float preco, char categoria[20], int quantstoque) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     strcpy(newNode->nome, nome); 
@@ -40,7 +40,7 @@ struct Node* insert(struct Node* root, char *nome, float preco, char *cat, int q
     return root;
 }
 
-// Function to perform an in-order traversal of the binary tree
+// Função recursiva para percorrer a arvore binária em ordem
 void inOrderTraversal(struct Node* root) {
     if (root != NULL) {
         inOrderTraversal(root->left);
@@ -85,11 +85,11 @@ void deleteNode(struct Node** root, char *targetNome) {
         int cmp = strcmp(targetNome, current->nome);
 
         if (cmp == 0) {
-            // Node found
+            // Achou
             if (current->left == NULL && current->right == NULL) {
-                // Case 1: Node has no children
+                // Case 1: Node não tem filho
                 if (parent == NULL) {
-                    *root = NULL; // The root itself is the only node in the tree
+                    *root = NULL; // A raiz é o unico node
                 } else if (parent->left == current) {
                     parent->left = NULL;
                 } else {
@@ -97,10 +97,10 @@ void deleteNode(struct Node** root, char *targetNome) {
                 }
                 free(current);
             } else if (current->left == NULL || current->right == NULL) {
-                // Case 2: Node has one child
+                // Case 2: Node tem um filho
                 struct Node* child = (current->left != NULL) ? current->left : current->right;
                 if (parent == NULL) {
-                    *root = child; // Current node is the root
+                    *root = child; // Node atual é a raiz
                 } else if (parent->left == current) {
                     parent->left = child;
                 } else {
@@ -108,10 +108,15 @@ void deleteNode(struct Node** root, char *targetNome) {
                 }
                 free(current);
             } else {
-                // Case 3: Node has two children
+                // Caso 3: Node tem dois filhos
                 struct Node* successor = findMin(current->right);
                 successor->left = current->left;
-                parent->left = current->right;
+                
+                if (parent->left == current) {
+                    parent->left = current->right;
+                } else {
+                    parent->right = current->right;
+                }
                 free(current);
             }
         } else if (cmp < 0) {
@@ -188,9 +193,9 @@ void updateNode(struct Node* root, char *targetNome) {
 
     if(strcmp(nome, current->nome) != 0){
 
-        // Delete the old node
+        // Deleta o node antigo
         deleteNode(&root, targetNome);
-        // Node found, insert a new node with the updated name
+        // Insere outro com os mesmos dados;
         insert(root, nome, preco, cat, quantidadestoq);
          
     }
@@ -282,6 +287,14 @@ void deleteScreen(struct Node** root){
 
 }
 
+void filterPrincer(struct Node* root){
+    float preco;
+    puts("Digite o preco maximo: ");
+    scanf("%f", &preco);
+    printIfLowerThan(root, preco);
+    system("pause");
+}
+
 
 int main() {
 
@@ -297,6 +310,7 @@ int main() {
             puts("2: Ver Produtos");
             puts("3: Alterar Produtos");
             puts("4: Deletar Produtos");
+            puts("5: Ver por preco");
             scanf("%d", &selector);
             fflush(stdin);
             switch(selector){
@@ -304,6 +318,7 @@ int main() {
                 case 2: inOrderTraversal(root); system("pause");break;
                 case 3: alterScreen(root); break;
                 case 4: deleteScreen(&root); break;
+                case 5: filterPrincer(root); break;
             }
 
     }
