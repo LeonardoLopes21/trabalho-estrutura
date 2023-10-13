@@ -5,7 +5,7 @@
 
 // Define the structure for a binary tree node
 struct Node {
-    char nome[20];
+    char nome[50];
     float preco;
     char categoria[20];
     int quantidadeEstoque;
@@ -14,7 +14,7 @@ struct Node {
 };
 
 // Function to create a new binary tree node
-struct Node* createNode(char nome[20], float preco, char categoria[20], int quantstoque) {
+struct Node* createNode(char nome[50], float preco, char categoria[20], int quantstoque) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     strcpy(newNode->nome, nome); 
     newNode->preco = preco;
@@ -147,7 +147,7 @@ void updateNode(struct Node* root, char *targetNome) {
     int menu = 1;
     float preco = current->preco;
     int quantidadestoq = current->quantidadeEstoque;
-    char nome[20] = "";
+    char nome[50] = "";
     char cat[20] = "";
     strcpy(nome, current->nome);
     strcpy(cat, current->categoria);
@@ -168,7 +168,7 @@ void updateNode(struct Node* root, char *targetNome) {
             case 1: puts("DIGITE O NOVO PRECO"); scanf("%f", &preco); fflush(stdin);break;
             case 2: puts("DIGITE A NOVA CATEGORIA"); scanf("%s", cat); fflush(stdin);break;
             case 3: puts("DIGITE A NOVA QUANTIDADE DE ESTOQUE"); scanf("%d", &quantidadestoq); fflush(stdin);break;
-            case 4: puts("DIGITE O NOVO NOME"); scanf("%s", nome); fflush(stdin);break;
+            case 4: puts("DIGITE O NOVO NOME"); fgets(nome, 50, stdin); strtok(nome, "\n"); fflush(stdin);break;
             case 5: menu = 0; break;
         }
     }
@@ -226,7 +226,8 @@ struct Node* registerScreen(struct Node* root){
     char confirm[10] = "";
     puts("================= REGISTRO ==============");
     puts("Por favor digite o nome do produto: ");
-    scanf("%s", prodName);
+    fgets(prodName, 50, stdin);
+    strtok(prodName, "\n");
     fflush(stdin);
     puts("Por favor digite o preco do produto: ");
     scanf("%f", &preco);
@@ -260,7 +261,7 @@ struct Node* registerScreen(struct Node* root){
 }
 
 void alterScreen(struct Node* root){
-    char nome[20];
+    char nome[50];
     inOrderTraversal(root);
     puts("Que produto deseja alterar?");
     scanf("%s", nome);
@@ -270,10 +271,11 @@ void alterScreen(struct Node* root){
 }
 
 void deleteScreen(struct Node** root){
-    char nome[20];
+    char nome[50];
     inOrderTraversal(*root);
     puts("Que produto deseja deletar?");
-    scanf("%s", nome);
+    fgets(nome, 50, stdin);
+    strtok(nome, "\n");
     fflush(stdin);
     system("pause");
     deleteNode(root, nome);
