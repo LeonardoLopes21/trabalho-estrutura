@@ -67,7 +67,6 @@ void printIfLowerThan(struct Node* root, int lower){
         
         printIfLowerThan(root->right, lower);
     }
-
 }
 
 struct Node* findMin(struct Node* node) {
@@ -154,13 +153,13 @@ void updateNode(struct Node* root, char *targetNome) {
     strcpy(cat, current->categoria);
     
     while(menu != 0){
-        puts("Por favor digite o que deseja alterar: \n");
+        puts("Por favor digite o que deseja alterar:");
         puts("0: SAIR");
-        puts("1: PRECO \n");
-        puts("2: CATEGORIA \n");
-        puts("3: QUANTIDADE DE ESTOQUE\n");
-        puts("4: NOME\n");
-        puts("5: APLICAR\n");
+        puts("1: PRECO");
+        puts("2: CATEGORIA");
+        puts("3: QUANTIDADE DE ESTOQUE");
+        puts("4: NOME");
+        puts("5: APLICAR");
         scanf("%d", &menu);
         fflush(stdin);
 
@@ -172,9 +171,6 @@ void updateNode(struct Node* root, char *targetNome) {
             case 4: puts("DIGITE O NOVO NOME"); scanf("%s", nome); fflush(stdin);break;
             case 5: menu = 0; break;
         }
-
-        
-
     }
 
     
@@ -223,7 +219,6 @@ void finder(struct Node* root, char *targetNome) {
 
 
 struct Node* registerScreen(struct Node* root){
-    puts(root);
     char prodName[50] = "";
     char cat[20] = "";
     float preco = 0;
@@ -274,14 +269,14 @@ void alterScreen(struct Node* root){
 
 }
 
-void deleteScreen(struct Node* root){
+void deleteScreen(struct Node** root){
     char nome[20];
-    inOrderTraversal(root);
-    puts("Que produto deseja alterar?");
-    fgets(nome, 20, stdin);
-    puts(nome);
+    inOrderTraversal(*root);
+    puts("Que produto deseja deletar?");
+    scanf("%s", nome);
+    fflush(stdin);
     system("pause");
-    deleteNode(&root, nome);
+    deleteNode(root, nome);
 
 }
 
@@ -306,7 +301,7 @@ int main() {
                 case 1: root = registerScreen(root); break;
                 case 2: inOrderTraversal(root); system("pause");break;
                 case 3: alterScreen(root); break;
-                case 4: deleteScreen(root); break;
+                case 4: deleteScreen(&root); break;
             }
 
     }
