@@ -171,7 +171,7 @@ void updateNode(struct Node* root, char *targetNome) {
         switch(menu){
             case 0: return;
             case 1: puts("DIGITE O NOVO PRECO"); scanf("%f", &preco); fflush(stdin);break;
-            case 2: puts("DIGITE A NOVA CATEGORIA"); scanf("%s", cat); fflush(stdin);break;
+            case 2: puts("DIGITE A NOVA CATEGORIA"); fgets(cat, 20, stdin); strtok(cat, "\n");  fflush(stdin);break;
             case 3: puts("DIGITE A NOVA QUANTIDADE DE ESTOQUE"); scanf("%d", &quantidadestoq); fflush(stdin);break;
             case 4: puts("DIGITE O NOVO NOME"); fgets(nome, 50, stdin); strtok(nome, "\n"); fflush(stdin);break;
             case 5: menu = 0; break;
@@ -238,7 +238,8 @@ struct Node* registerScreen(struct Node* root){
     scanf("%f", &preco);
     fflush(stdin);
     puts("Por favor digite a categoria do produto: ");
-    scanf("%s", cat);
+    fgets(cat, 20, stdin);
+    strtok(cat, "\n");
     fflush(stdin);
     fflush(stdin);
     puts("Por favor digite a quantidade no estoque do produto: ");
@@ -269,7 +270,8 @@ void alterScreen(struct Node* root){
     char nome[50];
     inOrderTraversal(root);
     puts("Que produto deseja alterar?");
-    scanf("%s", nome);
+    fgets(nome, 50, stdin);
+    strtok(nome, "\n");
     fflush(stdin);
     updateNode(root, nome);
 
