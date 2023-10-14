@@ -78,6 +78,7 @@ struct Node* findMin(struct Node* node) {
 }
 
 void deleteNode(struct Node** root, char *targetNome) {
+
     struct Node* current = *root;
     struct Node* parent = NULL;
 
@@ -146,6 +147,7 @@ void updateNode(struct Node* root, char *targetNome) {
 
     if(current == NULL){
         puts("NAO ENCONTRADO");
+        system("pause");
         return;
     }
 
@@ -203,23 +205,23 @@ void updateNode(struct Node* root, char *targetNome) {
 }
 
 
-void finder(struct Node* root, char *targetNome) {
-    if (root == NULL || strcmp(root->nome, targetNome) == 0) {
-        printf("==================\n");
-        printf("%s \n", root->nome);
-        printf("%s \n", root->categoria);
-        printf("%.2f \n", root->preco);
-        printf("%d \n", root->quantidadeEstoque);
-        printf("==================\n");
-        return;
-    }
+// void finder(struct Node* root, char *targetNome) {
+//     if (root == NULL || strcmp(root->nome, targetNome) == 0) {
+//         printf("==================\n");
+//         printf("%s \n", root->nome);
+//         printf("%s \n", root->categoria);
+//         printf("%.2f \n", root->preco);
+//         printf("%d \n", root->quantidadeEstoque);
+//         printf("==================\n");
+//         return;
+//     }
 
-    if (strcmp(targetNome, root->nome) < 0) {
-        return finder(root->left, targetNome);
-    } else {
-        return finder(root->right, targetNome);
-    }
-}
+//     if (strcmp(targetNome, root->nome) < 0) {
+//         return finder(root->left, targetNome);
+//     } else {
+//         return finder(root->right, targetNome);
+//     }
+// }
 
 
 
@@ -278,6 +280,11 @@ void alterScreen(struct Node* root){
 }
 
 void deleteScreen(struct Node** root){
+     if(*root == NULL){
+        puts("\nLISTA VAZIA!\n");
+        system("pause");
+        return;
+    }
     char nome[50];
     inOrderTraversal(*root);
     puts("Que produto deseja deletar?");
@@ -297,10 +304,21 @@ void filterPrincer(struct Node* root){
     system("pause");
 }
 
+void showScreen(struct Node* root){
+    if(root == NULL){
+        puts("\nNENHUM PRODUTO REGISTRADO!\n");
+    } else {
+        inOrderTraversal(root);
+    }
+}
+
 
 int main() {
 
     struct Node* root = NULL;
+    // root = insert(root, "Omo", 8.99, "Limpeza", 100);
+    // insert(root, "Nuggets", 8.99, "Comida", 100);
+    // insert(root, "Asa", 8.99, "Comida", 100);
 
     while(1){
 
@@ -317,7 +335,7 @@ int main() {
             fflush(stdin);
             switch(selector){
                 case 1: root = registerScreen(root); break;
-                case 2: inOrderTraversal(root); system("pause");break;
+                case 2: showScreen(root); system("pause");break;
                 case 3: alterScreen(root); break;
                 case 4: deleteScreen(&root); break;
                 case 5: filterPrincer(root); break;
